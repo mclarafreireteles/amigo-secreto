@@ -1,12 +1,14 @@
 'use client'
 
 import { useEffect, useState } from "react";
-import { addParticipant, getDB } from "../lib/idb";
+import { addParticipant, getDB, saveDrawResults } from "../lib/idb";
+import { drawSecretFriend } from "../core/draw";
 
 export default function Add() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState(""); 
     const [participants, setParticipants] = useState([]);
+    const [draw, setDraw] = useState([]);
 
     useEffect(() => {
         async function loadParticipants() {
@@ -43,6 +45,21 @@ export default function Add() {
         }
     }
 
+    const handleRaffle = async () => {
+      try {
+        const result = await drawSecretFriend(participants);
+        setDraw(result);
+
+        // Adicione aqui um log para verificar o resultado antes de salvar
+        console.log("Resultado do sorteio antes de salvar:", result);
+
+        await saveDrawResults(result);
+      } catch (err) {
+        alert(err.message);
+        console.error(err, 'Erro ao realizar sorteio');
+      }
+    }
+
     return (
         <main>
           <h1>Participantes</h1>
@@ -64,6 +81,15 @@ export default function Add() {
           <ul>
             {participants.map((p, i) => (
               <li key={i}>{p.name}</li>
+            ))}
+          </ul>
+
+          <button onClick={handleRaffle}>Sortear Amigo Secreto</button>
+          <ul>
+            {draw.map((par) => (
+              <li key={par.token}>
+                {par.from}: <a href={`/reveal/${par.token}`} target="_blank">Ver meu amigo secreto</a>
+              </li>
             ))}
           </ul>
         </main>
