@@ -1,4 +1,4 @@
-# 🎁 Amigo Secreto com Sorteio e Links Personalizados
+# 🎁 Amigo Secreto
 
 > Um app simples de sorteio de Amigo Secreto que funciona 100% no navegador, com persistência local usando IndexedDB e geração de links individuais para revelar o resultado.
 
